@@ -14,7 +14,7 @@ jobs:
       - name: Check linting
         run: ruff check --diff
 
-  clone:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,3 +27,13 @@ jobs:
       - name: List dataset
         working-directory: chatlog-dataset/data
         run: ls -l
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv pip install -e . --system
+          uv pip list
+      - name: Test
+        run: python test.py

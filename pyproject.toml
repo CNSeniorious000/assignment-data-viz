@@ -2,6 +2,13 @@
 name = "chatlog-viz"
 version = "0"
 requires-python = "~=3.12"
+dependencies = [
+    "promplate~=0.3.4.7",
+    "blosc2~=2.6.2",
+    "msgspec~=0.18.6",
+    "attrs~=23.2.0",
+    "alive-progress~=3.1.5",
+]
 
 [tool.pdm]
 distribution = false
