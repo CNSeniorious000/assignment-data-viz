@@ -1,0 +1,31 @@
+[project]
+name = "chatlog-viz"
+version = "0"
+requires-python = "~=3.12"
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+fmt = { composite = ["ruff check --fix --exit-zero", "ruff format"] }
+
+[tool.pdm.dev-dependencies]
+dev = ["ruff>=0.4.4"]
+
+[tool.ruff]
+line-length = 200
+
+[tool.ruff.lint]
+select = [
+    # isort
+    "I",
+    # pep8-naming
+    "N",
+    # pyflakes
+    "F",
+    # pycodestyle
+    "E",
+    "W",
+    # ruff
+    "RUF",
+]

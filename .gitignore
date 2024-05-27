@@ -1,0 +1,12 @@
+*cache*
+
+.venv
+
+*lock*
+*pdm*
+
+.vscode
+.fleet
+.idea
+
+.env

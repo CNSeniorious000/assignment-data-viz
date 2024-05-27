@@ -1,0 +1,3 @@
+[submodule "chatlog-dataset"]
+path = chatlog-dataset
+url = https://huggingface.co/datasets/muspi-merol/chatlog-dataset
