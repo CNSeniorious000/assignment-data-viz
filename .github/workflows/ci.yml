@@ -1,0 +1,29 @@
+name: CI
+
+on: [push, pull_request, fork, workflow_dispatch]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ruff
+        run: pip install ruff
+      - name: Check formatting
+        run: ruff format --check --diff
+      - name: Check linting
+        run: ruff check --diff
+
+  clone:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone submodules
+        run: |
+          git config --global url."https://${{ secrets.HF_TOKEN }}@huggingface.co/".insteadOf "https://huggingface.co/"
+          git submodule update --init --recursive
+          git lfs install
+          GIT_TRACE=1 git lfs pull
+      - name: List dataset
+        working-directory: chatlog-dataset/data
+        run: ls -l
