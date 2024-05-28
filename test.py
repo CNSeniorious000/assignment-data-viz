@@ -1,6 +1,6 @@
 from alive_progress import alive_it
 
-from src.utils.parse import File
+from src.core.parse import File
 
 
 def test_parse():

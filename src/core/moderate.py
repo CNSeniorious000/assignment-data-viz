@@ -8,8 +8,8 @@ from msgspec.msgpack import encode
 from openai import AsyncOpenAI
 
 from ..types.moderations import Moderation, ModerationResultItem
+from ..utils.sync import call_in_threadpool, iter_in_threadpool
 from .parse import File
-from .sync import call_in_threadpool, iter_in_threadpool
 
 client = AsyncOpenAI()
 
