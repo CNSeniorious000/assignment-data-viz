@@ -19,7 +19,7 @@ distribution = false
 fmt = { composite = ["ruff check --fix --exit-zero", "ruff format"] }
 
 [tool.pdm.dev-dependencies]
-dev = ["ruff>=0.4.4"]
+dev = ["ruff>=0.4.4", "python-dotenv>=1.0.1"]
 
 [tool.ruff]
 line-length = 320
