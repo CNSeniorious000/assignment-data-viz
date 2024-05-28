@@ -9,7 +9,7 @@ from blosc2 import decompress
 from msgspec.json import decode
 from promplate.prompt.chat import assistant
 
-from .types import InputItem, Metadata, OutputItem
+from ..types.chatlog import InputItem, Metadata, OutputItem
 
 
 @define
@@ -20,6 +20,10 @@ class Item:
     @cached_property
     def input_item(self) -> InputItem:
         return decode(self.raw)
+
+    @property
+    def response(self):
+        return self.input_item["extras"]["response"]
 
     @property
     def messages(self):
