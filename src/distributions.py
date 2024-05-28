@@ -11,7 +11,7 @@ def dispatch_processes[T](func: Callable[[tuple[int, int]], list[T]]):
     n_job = min(cpu_count() or 1, 8)
     if n_job == 1:
         print(f"Running {func.__name__} in single-threaded mode")
-        return func((0, 1))
+        return func((1, 0))
 
     from multiprocessing import Pool
 
