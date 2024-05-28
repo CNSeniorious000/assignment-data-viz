@@ -14,7 +14,7 @@ jobs:
       - name: Check linting
         run: ruff check --diff
 
-  run:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,5 +35,10 @@ jobs:
           pip install uv
           uv pip install -e . --system
           uv pip list
-      - name: Test
+      - name: Build
         run: python entry.py
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: data/output
