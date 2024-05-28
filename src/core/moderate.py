@@ -8,6 +8,7 @@ from msgspec.msgpack import encode
 from openai import AsyncOpenAI
 
 from ..types.moderations import Moderation, ModerationResultItem
+from ..utils.sk_pool import get_api_key, key_count
 from ..utils.sync import call_in_threadpool, iter_in_threadpool
 from .parse import File
 
@@ -18,7 +19,7 @@ root = Path("data/moderations")
 
 
 BATCH_SIZE = 5  # <=32
-CONCURRENCY = 3
+CONCURRENCY = 2 * key_count
 
 
 class ModerationPipeline:
@@ -33,7 +34,7 @@ class ModerationPipeline:
                 await file.write(encode((line_index, moderation)))
 
     async def moderate(self, strings: list[str]) -> list[Moderation]:
-        res = await client.moderations.create(input=strings)
+        res = await client.moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
         return res.model_dump(include={"results"})["results"]
 
     async def process_file(self, file: File, callback: Callable | None = None):
