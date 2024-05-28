@@ -1,18 +1,23 @@
 from asyncio import Semaphore, ensure_future, gather
+from functools import cache
 from pathlib import Path
 from typing import Callable, Iterable
 
 from aiofiles import open
 from alive_progress import alive_bar
 from msgspec.msgpack import encode
-from openai import APIError, AsyncOpenAI
 
 from ..types.moderations import Moderation, ModerationResultItem
 from ..utils.sk_pool import get_api_key, key_count
 from ..utils.sync import call_in_threadpool, iter_in_threadpool
 from .parse import File
 
-client = AsyncOpenAI()
+
+@cache
+def get_client():
+    from openai import AsyncOpenAI
+
+    return AsyncOpenAI()
 
 
 root = Path("data/moderations")
@@ -37,9 +42,11 @@ class ModerationPipeline:
                 await file.write(encode((line_index, moderation)))
 
     async def moderate(self, strings: list[str]) -> list[Moderation]:
+        from openai import APIError
+
         while True:
             try:
-                res = await client.moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
+                res = await get_client().moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
                 return res.model_dump(include={"results"})["results"]
             except APIError as e:
                 print(e.type, e.message)
