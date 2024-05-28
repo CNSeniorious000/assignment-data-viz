@@ -42,12 +42,20 @@ class ModerationPipeline:
                 print(e.type, e.message)
 
     async def process_file(self, file: File, callback: Callable | None = None):
+        if (root / file.path.name).with_suffix(".msgpack").exists():
+            if callback:
+                callback(await call_in_threadpool(lambda: file.length))
+            return
+
         async with self.semaphore:
             strings = []
             indices = []
             items = []
 
             async def flush():
+                if not strings:
+                    return
+
                 results = await self.moderate(strings)
                 items.extend(zip(indices, results))
 
