@@ -5,7 +5,7 @@ from typing import Callable, Iterable
 from aiofiles import open
 from alive_progress import alive_bar
 from msgspec.msgpack import encode
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, RateLimitError
 
 from ..types.moderations import Moderation, ModerationResultItem
 from ..utils.sk_pool import get_api_key, key_count
@@ -34,31 +34,41 @@ class ModerationPipeline:
                 await file.write(encode((line_index, moderation)))
 
     async def moderate(self, strings: list[str]) -> list[Moderation]:
-        res = await client.moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
-        return res.model_dump(include={"results"})["results"]
+        while True:
+            try:
+                res = await client.moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
+                return res.model_dump(include={"results"})["results"]
+            except RateLimitError as e:
+                print(e.type, e.message)
 
     async def process_file(self, file: File, callback: Callable | None = None):
         async with self.semaphore:
             strings = []
+            indices = []
             items = []
 
-            async def flush(current_line_index: int):
+            async def flush():
                 results = await self.moderate(strings)
-                items.extend(zip(range(current_line_index - len(strings), current_line_index), results))
+                items.extend(zip(indices, results))
 
             line_index = 0
 
             async for line_index, item in iter_in_threadpool(enumerate(file.items)):
+                if not item.response:  # empty response
+                    continue
+
+                indices.append(line_index)
                 strings.append(item.response[-2000:])
 
                 if callback:
                     callback()
 
                 if len(strings) == BATCH_SIZE:
-                    await flush(line_index)
+                    await flush()
                     strings.clear()
+                    indices.clear()
 
-            await flush(line_index)
+            await flush()
 
             await self.save(file.path.name, items)
 
