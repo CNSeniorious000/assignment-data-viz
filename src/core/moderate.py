@@ -5,7 +5,7 @@ from typing import Callable, Iterable
 from aiofiles import open
 from alive_progress import alive_bar
 from msgspec.msgpack import encode
-from openai import AsyncOpenAI, RateLimitError
+from openai import APIError, AsyncOpenAI
 
 from ..types.moderations import Moderation, ModerationResultItem
 from ..utils.sk_pool import get_api_key, key_count
@@ -17,13 +17,16 @@ client = AsyncOpenAI()
 
 root = Path("data/moderations")
 
+if not root.exists():
+    root.mkdir(parents=True)
+
 
 BATCH_SIZE = 5  # <=32
-CONCURRENCY = 2 * key_count
+CONCURRENCY = 3 * key_count
 
 
 class ModerationPipeline:
-    def __init__(self) -> None:
+    def __init__(self):
         self.semaphore = Semaphore(CONCURRENCY)
 
     async def save(self, file_id: str, items: Iterable[ModerationResultItem]):
@@ -38,7 +41,7 @@ class ModerationPipeline:
             try:
                 res = await client.moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
                 return res.model_dump(include={"results"})["results"]
-            except RateLimitError as e:
+            except APIError as e:
                 print(e.type, e.message)
 
     async def process_file(self, file: File, callback: Callable | None = None):
