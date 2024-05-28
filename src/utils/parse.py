@@ -69,8 +69,8 @@ class File:
 
     @property
     def items(self):
-        return list(starmap(Item, enumerate(self.raw.strip().split(b"\n"))))
+        return starmap(Item, enumerate(self.raw.strip().split(b"\n")))
 
     @property
     def example(self):
-        return self.items[0]
+        return next(self.items)

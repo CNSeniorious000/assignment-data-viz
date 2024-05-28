@@ -5,6 +5,8 @@
 *lock*
 *pdm*
 
+/data
+
 .vscode
 .fleet
 .idea
