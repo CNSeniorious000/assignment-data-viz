@@ -1,22 +1,9 @@
-from os import cpu_count
-from typing import Callable, Counter
+from typing import Counter
 
 from .core.count import count_messages_tokens, count_response_tokens
 from .core.parse import File
+from .utils.multiprocessing import dispatch_processes
 from .utils.output import save_output
-from .utils.sum import sum_lists
-
-
-def dispatch_processes[T](func: Callable[[tuple[int, int]], list[T]]):
-    n_job = min(cpu_count() or 1, 8)
-    if n_job == 1:
-        print(f"Running {func.__name__} in single-threaded mode")
-        return func((1, 0))
-
-    from concurrent.futures import ThreadPoolExecutor
-
-    with ThreadPoolExecutor(max_workers=n_job) as executor:
-        return sum_lists(executor.map(func, [(n_job, i) for i in range(n_job)]))
 
 
 def main():
