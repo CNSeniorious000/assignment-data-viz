@@ -13,10 +13,10 @@ def dispatch_processes[T](func: Callable[[tuple[int, int]], list[T]]):
         print(f"Running {func.__name__} in single-threaded mode")
         return func((1, 0))
 
-    from multiprocessing import Pool
+    from concurrent.futures import ThreadPoolExecutor
 
-    with Pool(n_job) as pool:
-        return sum_lists(pool.map(func, ((n_job, i) for i in range(n_job))))
+    with ThreadPoolExecutor(max_workers=n_job) as executor:
+        return sum_lists(executor.map(func, [(n_job, i) for i in range(n_job)]))
 
 
 def main():
