@@ -12,3 +12,4 @@ def detect_language(text: str):
     language = get_detector().detect_language_of(text)
     if language is not None:
         return language.name
+    return "-"
