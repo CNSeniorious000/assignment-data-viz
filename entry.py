@@ -1,4 +1,5 @@
 if __name__ == "__main__":
-    from src.distributions import main
+    from src import distributions, languages
 
-    main()
+    languages.main()
+    distributions.main()
