@@ -1,9 +1,20 @@
 from typing import Counter
 
-from .core.count import count_messages_tokens, count_response_tokens
-from .core.parse import File
-from .utils.multiprocessing import dispatch_processes
+from promptools.openai import count_token
+
+from .core.parse import File, Item
+from .utils.multiprocessing import as_worker, dispatch_processes
 from .utils.output import save_output
+
+
+@as_worker
+def count_response_tokens(item: Item):
+    return count_token(item.response)
+
+
+@as_worker
+def count_messages_tokens(item: Item):
+    return count_token(item.messages)
 
 
 def main():

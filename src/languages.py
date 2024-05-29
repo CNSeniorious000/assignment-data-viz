@@ -1,13 +1,17 @@
 from collections import Counter
 
-from .core.parse import File
+from .core.parse import Item
 from .utils.language import detect_language
+from .utils.multiprocessing import as_worker, dispatch_processes
 from .utils.output import save_output
 
 
-def main():
-    from alive_progress import alive_it
+@as_worker
+def detect_response_language(item: Item):
+    return detect_language(item.response)
 
-    results = [detect_language(i.response) for file in alive_it(File.glob()) for i in file.items]
+
+def main():
+    results = dispatch_processes(detect_response_language)
 
     save_output("languages", Counter(results))
