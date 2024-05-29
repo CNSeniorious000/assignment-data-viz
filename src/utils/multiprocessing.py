@@ -1,5 +1,5 @@
 from functools import wraps
-from os import cpu_count
+from os import cpu_count, getenv
 from typing import Callable, Iterable
 
 from ..core.parse import File, Item
@@ -21,20 +21,23 @@ JobArgs = tuple[int, int]
 def as_worker[T](func: Callable[[Item], T]) -> Callable[[JobArgs], list[T]]:
     @wraps(func)
     def worker(args: JobArgs):
-        n_job, index = args
-        files = [file for i, file in enumerate(File.glob()) if i % n_job == index]
+        n_jobs, index = args
+        files = [file for i, file in enumerate(File.glob()) if i % n_jobs == index]
         return [func(item) for f in iter_maybe_with_progress(files, index == 0) for item in f.items]
 
     return worker
 
 
 def dispatch_processes[T](func: Callable[[JobArgs], list[T]]):
-    n_job = min(cpu_count() or 1, 4)
-    if n_job == 1:
+    n_jobs = cpu_count() or 1
+    if max_jobs := getenv("MAX_JOBS"):
+        n_jobs = min(n_jobs, int(max_jobs))
+
+    if n_jobs == 1:
         print(f"Running {func.__name__} in single-threaded mode")
         return func((1, 0))
 
     from concurrent.futures import ProcessPoolExecutor
 
-    with ProcessPoolExecutor(max_workers=n_job) as executor:
-        return sum_lists(executor.map(func, [(n_job, i) for i in range(n_job)]))
+    with ProcessPoolExecutor(max_workers=n_jobs) as executor:
+        return sum_lists(executor.map(func, [(n_jobs, i) for i in range(n_jobs)]))
