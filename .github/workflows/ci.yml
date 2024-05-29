@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request, fork, workflow_dispatch]
 
 jobs:
-  checks:
+  ruff:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,6 +13,20 @@ jobs:
         run: ruff format --check --diff
       - name: Check linting
         run: ruff check --diff
+
+  pyright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: 3.12
+      - name: Install dependencies
+        run: |
+          pdm install
+          yarn global add pyright
+      - name: Type check
+        run: pdm run pyright
 
   build:
     runs-on: ubuntu-latest
@@ -24,9 +38,6 @@ jobs:
           git submodule update --init --recursive
           git lfs install
           GIT_TRACE=1 git lfs pull
-      - name: List dataset
-        working-directory: chatlog-dataset/data
-        run: ls -l
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12
@@ -34,7 +45,6 @@ jobs:
         run: |
           pip install uv
           uv pip install -e . --system
-          uv pip list
       - name: Build
         run: python entry.py
       - name: Upload results
