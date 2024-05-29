@@ -1,6 +1,8 @@
+from functools import wraps
 from pathlib import Path
+from typing import Callable
 
-from msgspec.json import encode
+from msgspec.json import decode, encode
 
 root = Path("data/output")
 
@@ -8,5 +10,18 @@ if not root.exists():
     root.mkdir(parents=True)
 
 
-def save_output(name: str, data):
-    (root / name).with_suffix(".json").write_bytes(encode(data))
+def persist_to_json(filename: str):
+    file = (root / filename).with_suffix(".json")
+
+    def decorator[T](func: Callable[[], T]) -> Callable[[], T]:
+        @wraps(func)
+        def wrapper():
+            if file.exists():
+                return decode(file.read_bytes())
+            res = func()
+            file.write_bytes(encode(res))
+            return res
+
+        return wrapper
+
+    return decorator
