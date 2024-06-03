@@ -1,6 +1,6 @@
 """parse data from .jsonl.lz4 binary files"""
 
-from functools import cached_property
+from functools import cache, cached_property
 from itertools import starmap
 from pathlib import Path
 
@@ -64,6 +64,7 @@ class File:
         return decompress(self.path.read_bytes())
 
     @property
+    @cache
     def length(self):
         return self.raw.count(b"\n")
 
@@ -74,3 +75,6 @@ class File:
     @property
     def example(self):
         return next(self.items)
+
+    def __hash__(self):
+        return hash(self.path)
