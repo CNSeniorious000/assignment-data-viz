@@ -1,7 +1,6 @@
 from asyncio import Semaphore, ensure_future, gather
 from functools import cache
 from itertools import chain
-from pathlib import Path
 from typing import Callable, Iterable
 
 from aiofiles import open
@@ -9,6 +8,7 @@ from alive_progress import alive_bar
 from msgspec.msgpack import encode
 
 from ..types.moderations import Moderation, ModerationResultItem
+from ..utils.path import root
 from ..utils.sk_pool import get_api_key, key_count
 from ..utils.sync import call_in_threadpool, iter_in_threadpool
 from .parse import File
@@ -21,7 +21,7 @@ def get_client():
     return AsyncOpenAI()
 
 
-root = Path("data/moderations")
+root /= "data/moderations"
 
 if not root.exists():
     root.mkdir(parents=True)

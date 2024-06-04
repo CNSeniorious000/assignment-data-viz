@@ -1,8 +1,13 @@
 if __name__ == "__main__":
-    from multiprocessing import set_start_method
+    from sys import argv
 
-    from src import distributions, languages
+    from src import distributions, languages, moderations
 
-    set_start_method("spawn", True)
-    languages.main()
-    distributions.main()
+    if "moderations" in argv:
+        moderations.main()
+
+    if "distributions" in argv:
+        distributions.main()
+
+    if "languages" in argv:
+        languages.main()

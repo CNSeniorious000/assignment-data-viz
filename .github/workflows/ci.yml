@@ -50,10 +50,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          uv pip compile pyproject.toml > requirements.txt
-          uv pip install -r requirements.txt --system
+          uv pip install -r pyproject.toml --system
       - name: Build
-        run: python entry.py
+        run: python entry.py distributions languages
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:

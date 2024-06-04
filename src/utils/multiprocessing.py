@@ -38,6 +38,9 @@ def dispatch_processes[T](func: Callable[[JobArgs], list[T]]):
         return func((1, 0))
 
     from concurrent.futures import ProcessPoolExecutor
+    from multiprocessing import set_start_method
+
+    set_start_method("spawn", True)
 
     with ProcessPoolExecutor(max_workers=n_jobs) as executor:
         return sum_lists(executor.map(func, [(n_jobs, i) for i in range(n_jobs)]))

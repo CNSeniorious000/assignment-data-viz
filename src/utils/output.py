@@ -1,10 +1,11 @@
 from functools import wraps
-from pathlib import Path
 from typing import Callable
 
 from msgspec.json import decode, encode
 
-root = Path("data/output")
+from ..utils.path import root
+
+root /= "data/output"
 
 if not root.exists():
     root.mkdir(parents=True)
