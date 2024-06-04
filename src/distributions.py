@@ -26,7 +26,7 @@ def main():
     total_count = sum(i.length for i in alive_it(files))
     print(f"{total_count = }")
 
-    conversation_lengths = [i.length for i in alive_it(files)]
+    conversation_lengths = [i.length for f in alive_it(files) for i in f.items]
     print(f"total_messages = {sum(conversation_lengths)}")
 
     response_tokens = dispatch_processes(count_response_tokens)
