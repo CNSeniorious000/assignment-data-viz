@@ -10,7 +10,7 @@ class Body(TypedDict):
 
 class Metadata(TypedDict):
     headers: dict[str, str]
-    server: str | None
+    server: NotRequired[str]
     time: float
 
 
@@ -21,7 +21,3 @@ class Extras(Metadata):
 class InputItem(TypedDict):
     body: Body
     extras: Extras
-
-
-class OutputItem(Metadata):
-    messages: list[Message]

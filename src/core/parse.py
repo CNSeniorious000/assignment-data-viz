@@ -9,7 +9,7 @@ from blosc2 import decompress
 from msgspec.json import decode
 from promplate.prompt.chat import assistant
 
-from ..types.chatlog import InputItem, Metadata, OutputItem
+from ..types.chatlog import InputItem, Metadata
 
 
 @define
@@ -32,7 +32,7 @@ class Item:
 
     @property
     def length(self):
-        return len(self.output_item["messages"])
+        return len(self.messages)
 
     @property
     def headers(self):
@@ -41,11 +41,7 @@ class Item:
     @property
     def metadata(self) -> Metadata:
         extras = self.input_item["extras"]
-        return {"headers": extras["headers"], "server": extras["server"], "time": extras["time"]}
-
-    @property
-    def output_item(self) -> OutputItem:
-        return {"messages": self.messages, **self.metadata}
+        return {"headers": extras["headers"], "server": extras.get("server", ""), "time": extras["time"]}
 
     def __repr__(self):
         return repr(self.messages)
