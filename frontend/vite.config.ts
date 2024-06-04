@@ -4,5 +4,5 @@ import uno from "unocss/vite"
 
 export default defineConfig({
   plugins: [uno(), sveltekit()],
-  build: { sourcemap: true }
+  build: { sourcemap: true },
 })

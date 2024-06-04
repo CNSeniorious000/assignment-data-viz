@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { total } from "../../../data/output/distributions.json"
+  import Bar from "$components/Bar.svelte"
 </script>
 
 <main class="fixed inset-0 grid place-items-center font-mono">
-  {total}
+  <Bar />
 </main>
