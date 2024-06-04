@@ -1,7 +1,4 @@
 <script lang="ts">
-  import Bar from "$components/Bar.svelte"
 </script>
 
-<main class="fixed inset-0 grid place-items-center font-mono">
-  <Bar />
-</main>
+<a class="underline-offset-4 hover:underline" href="/ppt/0">跳转到 PPT</a>

@@ -1,7 +1,9 @@
 <script lang="ts">
   import * as echarts from "echarts"
   import { onMount } from "svelte"
-  import { messages_token, total } from "$output/distributions.json"
+
+  export let title: string
+  export let data: Record<string, number>
 
   let div: HTMLDivElement
 
@@ -16,7 +18,7 @@
     }
   }
 
-  let length = Object.keys(messages_token)
+  let length = Object.keys(data)
     .map(Number)
     .sort((a, b) => a - b)
     .at(-1)!
@@ -24,7 +26,7 @@
   length = Math.min(length, 20000)
 
   const xs = Array.from({ length }).map((_, i) => i)
-  const ys = Array.from({ length }).map((_, i) => messages_token[String(i) as keyof typeof messages_token] ?? 0)
+  const ys = Array.from({ length }).map((_, i) => data[String(i)] ?? 0)
 
   $: resize(width, height)
 
@@ -32,7 +34,7 @@
     chart = echarts.init(div, null, { width, height })
 
     chart.setOption({
-      title: { text: `Token Count in ${total} chats` },
+      title: { text: title },
       toolbox: {
         show: true,
         feature: {
