@@ -59,6 +59,21 @@ jobs:
           name: output
           path: data/output
 
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        working-directory: frontend
+        run: bun install
+      - name: Svelte check
+        working-directory: frontend
+        run: bun check
+      - name: Eslint check
+        working-directory: frontend
+        run: bun lint
+        
   deploy:
     runs-on: ubuntu-latest
     needs: build
