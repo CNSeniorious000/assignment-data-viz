@@ -1,11 +1,13 @@
+import re
 from asyncio import Semaphore, ensure_future, gather
 from functools import cache
 from itertools import chain
-from typing import Callable, Iterable
+from typing import Any, Callable, Generator, Iterable
 
 from aiofiles import open
-from alive_progress import alive_bar
-from msgspec.msgpack import encode
+from alive_progress import alive_bar, alive_it
+from msgspec import DecodeError
+from msgspec.msgpack import decode, encode
 
 from ..types.moderations import Moderation, ModerationResultItem
 from ..utils.path import root
@@ -106,6 +108,28 @@ class ModerationPipeline:
             await self.save(file.path.name, items)
 
     async def process_every_file(self):
-        total = await call_in_threadpool(lambda: sum(i.length for i in File.glob()))
+        total = await call_in_threadpool(lambda: sum(i.length for i in alive_it(File.glob())))
         with alive_bar(total, title="Moderating") as bar:
             await gather(*map(ensure_future, (self.process_file(i, bar) for i in File.glob())))
+
+
+def get_length_information(e: DecodeError):
+    if match := re.search(r"trailing characters \(byte (\d+)\)", e.args[0]):
+        return int(match.group(1))
+
+    raise e from None
+
+
+def stream_msgpack_chunks(data: bytes) -> Generator[tuple[int, Moderation], Any, None]:
+    while True:
+        try:
+            yield decode(data)
+            return
+        except DecodeError as e:
+            index = get_length_information(e)
+            yield decode(data[:index])
+            data = data[index:]
+
+
+def all_saved_files():
+    return list(root.glob("*.msgpack"))
