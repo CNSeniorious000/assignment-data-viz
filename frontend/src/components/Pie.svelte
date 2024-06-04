@@ -25,9 +25,6 @@
 
   length = Math.min(length, 20000)
 
-  const xs = Array.from({ length }).map((_, i) => i)
-  const ys = Array.from({ length }).map((_, i) => data[String(i)] ?? 0)
-
   $: resize(width, height)
 
   onMount(() => {
