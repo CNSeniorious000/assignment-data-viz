@@ -5,7 +5,6 @@ from itertools import starmap
 from pathlib import Path
 
 from attrs import define
-from blosc2 import decompress
 from msgspec.json import decode
 from promplate.prompt.chat import assistant
 
@@ -57,6 +56,8 @@ class File:
 
     @property
     def raw(self) -> bytes:
+        from blosc2 import decompress
+
         return decompress(self.path.read_bytes())
 
     @property
