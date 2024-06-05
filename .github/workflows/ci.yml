@@ -66,9 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
+        run: npm i -g pnpm
       - name: Install dependencies
         working-directory: frontend
         run: pnpm install
@@ -93,9 +91,7 @@ jobs:
           name: output-languages
           path: data/output
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
+        run: npm i -g pnpm
       - name: Install dependencies
         working-directory: frontend
         run: pnpm install
