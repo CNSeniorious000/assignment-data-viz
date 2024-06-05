@@ -8,7 +8,7 @@ const config = {
   kit: {
     adapter: adapter(),
     paths: {
-      base: process.env.BASE_PATH ?? "",
+      base: "",
     },
     alias: {
       $components: "src/components",

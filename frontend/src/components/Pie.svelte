@@ -18,19 +18,13 @@
     }
   }
 
-  let length = Object.keys(data)
-    .map(Number)
-    .sort((a, b) => a - b)
-    .at(-1)!
-
-  length = Math.min(length, 20000)
-
   $: resize(width, height)
 
   onMount(() => {
     chart = echarts.init(div, null, { width, height })
 
     chart.setOption({
+      title: { text: title },
       tooltip: {
         trigger: "item",
       },
