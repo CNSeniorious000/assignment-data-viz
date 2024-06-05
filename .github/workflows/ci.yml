@@ -65,17 +65,19 @@ jobs:
   eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Install dependencies
         working-directory: frontend
-        run: bun install
+        run: pnpm install
       - name: Eslint check
         working-directory: frontend
-        run: bun lint
+        run: pnpm lint
         
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: upnpmtu-latest
     needs: build
     permissions:
       pages: write
@@ -90,19 +92,21 @@ jobs:
         with:
           name: output-languages
           path: data/output
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Install dependencies
         working-directory: frontend
-        run: bun install
+        run: pnpm install
       - name: Svelte check
         working-directory: frontend
-        run: bun check
+        run: pnpm check
       - name: Build frontend
         working-directory: frontend
         env:
           BASE_PATH: /${{ github.event.repository.name }}
-        run: bun run build
+        run: pnpm build
       - name: Upload pages
         uses: actions/upload-pages-artifact@v3
         with:
