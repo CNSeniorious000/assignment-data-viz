@@ -34,7 +34,7 @@ def moderations_as_embeddings():
 
     from .utils.path import root
 
-    target = root / "embeddings.npy"
+    target = root / "data" / "embeddings.npy"
     if target.exists():
         return
 
@@ -46,7 +46,7 @@ def moderations_as_embeddings():
             scores = moderation["category_scores"]
             embeddings.append(asarray(scores[i] for i in all_categories))
 
-    save(target, embeddings)
+    save(target, asarray(embeddings))
 
 
 def main():
