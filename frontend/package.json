@@ -12,12 +12,12 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.27.1",
+    "@antfu/eslint-config": "^2.27.2",
     "@fontsource-variable/jetbrains-mono": "^5.0.22",
     "@sveltejs/adapter-static": "^3.0.4",
     "@sveltejs/kit": "^2.5.24",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
-    "@types/eslint": "^8.56.11",
+    "@types/eslint": "^8.56.12",
     "@types/node": "^20.16.1",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
