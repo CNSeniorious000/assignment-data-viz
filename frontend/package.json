@@ -12,10 +12,10 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.27.2",
+    "@antfu/eslint-config": "^2.27.3",
     "@fontsource-variable/jetbrains-mono": "^5.0.22",
     "@sveltejs/adapter-static": "^3.0.4",
-    "@sveltejs/kit": "^2.5.24",
+    "@sveltejs/kit": "^2.5.25",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@types/eslint": "^8.56.12",
     "@types/node": "^20.16.1",
