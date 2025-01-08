@@ -15,7 +15,7 @@
     "@antfu/eslint-config": "^2.27.3",
     "@fontsource-variable/jetbrains-mono": "^5.1.2",
     "@sveltejs/adapter-static": "^3.0.8",
-    "@sveltejs/kit": "^2.15.1",
+    "@sveltejs/kit": "^2.15.2",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@types/eslint": "^8.56.12",
     "@types/node": "^20.17.12",
