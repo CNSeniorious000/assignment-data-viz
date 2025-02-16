@@ -53,8 +53,13 @@ class ModerationPipeline:
         retry_count = 0
         while True:
             try:
-                indices, strings = zip(*inputs)
-                res = await get_client().moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
+                indices: list[int]
+                strings: list[str]
+                indices, strings = zip(*inputs)  # type: ignore
+                res = await get_client().moderations.create(
+                    input=strings,
+                    extra_headers=({"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None),
+                )
                 return zip(indices, res.model_dump(include={"results"})["results"])
             except APIError as e:
                 retry_count += 1
@@ -66,7 +71,10 @@ class ModerationPipeline:
                         print(inputs[0][1])
                     else:
                         index = len(inputs) // 2
-                        return chain(await self.moderate(inputs[:index]), await self.moderate(inputs[index:]))
+                        return chain(
+                            await self.moderate(inputs[:index]),
+                            await self.moderate(inputs[index:]),
+                        )
 
     async def process_file(self, file: File, callback: Callable | None = None):
         if (root / file.path.name).with_suffix(".msgpack").exists():
