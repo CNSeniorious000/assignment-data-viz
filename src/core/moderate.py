@@ -44,7 +44,9 @@ class ModerationPipeline:
             for line_index, moderation in items:
                 await file.write(encode((line_index, moderation)))
 
-    async def moderate(self, inputs: list[tuple[int, str]]) -> Iterable[tuple[int, Moderation]]:
+    async def moderate(
+        self, inputs: list[tuple[int, str]]
+    ) -> Iterable[tuple[int, Moderation]]:
         if not inputs:
             return []
 
@@ -53,8 +55,17 @@ class ModerationPipeline:
         retry_count = 0
         while True:
             try:
-                indices, strings = zip(*inputs)
-                res = await get_client().moderations.create(input=strings, extra_headers={"Authorization": f"Bearer {get_api_key()}"} if key_count > 1 else None)
+                indices: list[int]
+                strings: list[str]
+                indices, strings = zip(*inputs)  # type: ignore
+                res = await get_client().moderations.create(
+                    input=strings,
+                    extra_headers=(
+                        {"Authorization": f"Bearer {get_api_key()}"}
+                        if key_count > 1
+                        else None
+                    ),
+                )
                 return zip(indices, res.model_dump(include={"results"})["results"])
             except APIError as e:
                 retry_count += 1
@@ -66,7 +77,10 @@ class ModerationPipeline:
                         print(inputs[0][1])
                     else:
                         index = len(inputs) // 2
-                        return chain(await self.moderate(inputs[:index]), await self.moderate(inputs[index:]))
+                        return chain(
+                            await self.moderate(inputs[:index]),
+                            await self.moderate(inputs[index:]),
+                        )
 
     async def process_file(self, file: File, callback: Callable | None = None):
         if (root / file.path.name).with_suffix(".msgpack").exists():
@@ -108,9 +122,13 @@ class ModerationPipeline:
             await self.save(file.path.name, items)
 
     async def process_every_file(self):
-        total = await call_in_threadpool(lambda: sum(i.length for i in alive_it(File.glob())))
+        total = await call_in_threadpool(
+            lambda: sum(i.length for i in alive_it(File.glob()))
+        )
         with alive_bar(total, title="Moderating") as bar:
-            await gather(*map(ensure_future, (self.process_file(i, bar) for i in File.glob())))
+            await gather(
+                *map(ensure_future, (self.process_file(i, bar) for i in File.glob()))
+            )
 
 
 def get_length_information(e: DecodeError):
