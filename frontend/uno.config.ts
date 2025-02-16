@@ -4,7 +4,7 @@ import { defineConfig, presetIcons, presetUno, presetWebFonts, transformerDirect
 const config = defineConfig({
   extractors: [extractorSvelte()],
   transformers: [transformerVariantGroup(), transformerDirectives()],
-  presets: [presetUno(), presetIcons(), presetWebFonts({ provider: "bunny", fonts: { mono: { name: "JetBrains Mono Variable", provider: "none" } } })],
+  presets: [presetUno({ preflight: "on-demand" }), presetIcons(), presetWebFonts({ provider: "bunny", fonts: { mono: { name: "JetBrains Mono Variable", provider: "none" } } })],
 })
 
 export default config
