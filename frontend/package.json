@@ -12,7 +12,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.13.1",
+    "@antfu/eslint-config": "^4.13.2",
     "@fontsource-variable/jetbrains-mono": "^5.2.5",
     "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.21.1",
@@ -27,7 +27,7 @@
     "echarts": "^5.6.0",
     "eslint": "^9.27.0",
     "eslint-plugin-format": "^1.0.1",
-    "eslint-plugin-svelte": "^3.8.2",
+    "eslint-plugin-svelte": "^3.9.0",
     "svelte": "^4.2.20",
     "svelte-check": "^4.2.1",
     "svelte-eslint-parser": "^1.2.0",
