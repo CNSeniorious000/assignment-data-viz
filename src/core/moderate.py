@@ -123,7 +123,7 @@ class ModerationPipeline:
 
 def get_length_information(e: DecodeError):
     if match := re.search(r"trailing characters \(byte (\d+)\)", e.args[0]):
-        return int(match.group(1))
+        return int(match[1])
 
     raise e from None
 
