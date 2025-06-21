@@ -15,4 +15,9 @@ export default antfu({
     },
     semi: false,
   },
+  overrides: {
+    svelte: {
+      "import/no-mutable-exports": "off",
+    },
+  },
 })
