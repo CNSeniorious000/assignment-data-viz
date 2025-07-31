@@ -24,7 +24,7 @@
     "@unocss/eslint-plugin": "^65.5.0",
     "@unocss/extractor-svelte": "^65.5.0",
     "@unocss/reset": "^65.5.0",
-    "echarts": "^5.6.0",
+    "echarts": "^6.0.0",
     "eslint": "^9.32.0",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-svelte": "^3.11.0",
