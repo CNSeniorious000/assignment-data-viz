@@ -84,11 +84,11 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: output-distributions
           path: data/output
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: output-languages
           path: data/output
