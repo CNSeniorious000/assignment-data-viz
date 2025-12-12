@@ -57,7 +57,7 @@ jobs:
       - name: Build
         run: python entry.py ${{ matrix.job }}
       - name: Upload results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: output-${{ matrix.job }}
           path: data/output
@@ -84,11 +84,11 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: output-distributions
           path: data/output
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: output-languages
           path: data/output
