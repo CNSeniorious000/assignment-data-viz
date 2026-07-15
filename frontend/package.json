@@ -20,7 +20,7 @@
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.13.3",
     "@typescript-eslint/eslint-plugin": "^8.64.0",
-    "@typescript-eslint/parser": "^8.63.0",
+    "@typescript-eslint/parser": "^8.64.0",
     "@unocss/eslint-plugin": "^65.5.0",
     "@unocss/extractor-svelte": "^65.5.0",
     "@unocss/reset": "^65.5.0",
